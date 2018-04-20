@@ -1,0 +1,23 @@
+{
+    "name": "x5hell/yaml_config",
+    "description": "finance module",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexey Dobrynin",
+            "email": "gopooop@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "romaricdrigon/metayaml": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "YamlConfig\\": "Module/",
+            "Helper\\": "Helper/",
+            "Config\\": "Config/Code"
+        }
+    }
+}
