@@ -1,5 +1,5 @@
 {
-    "name": "x5hell/yamlConfig",
+    "name": "x5hell/yaml-config",
     "description": "config code generator from yaml config",
     "type": "library",
     "license": "MIT",

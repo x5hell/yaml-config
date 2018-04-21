@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b26b863b1b6ddbc5ed5dca2df149c954",
+    "content-hash": "d78852385302f647b1f3730a8bb9cb9a",
     "packages": [
         {
             "name": "romaricdrigon/metayaml",
