@@ -1,6 +1,6 @@
 <?php
 
-namespace Helper;
+namespace YamlConfig\Helper;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

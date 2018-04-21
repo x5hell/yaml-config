@@ -1,0 +1,120 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "b26b863b1b6ddbc5ed5dca2df149c954",
+    "packages": [
+        {
+            "name": "romaricdrigon/metayaml",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/romaricdrigon/MetaYaml.git",
+                "reference": "03b0af567981a8a060606989c395974baf385bd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/romaricdrigon/MetaYaml/zipball/03b0af567981a8a060606989c395974baf385bd1",
+                "reference": "03b0af567981a8a060606989c395974baf385bd1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/yaml": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "atoum/atoum": "~1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "RomaricDrigon\\MetaYaml": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Using [Yaml|Xml|json] schemas files to validate [Yaml|Xml|json] ",
+            "homepage": "http://github.com/romaricdrigon/MetaYaml",
+            "keywords": [
+                "json",
+                "schema",
+                "validation",
+                "xml",
+                "yaml"
+            ],
+            "time": "2016-02-29T10:28:30+00:00"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "v3.4.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "a42f9da85c7c38d59f5e53f076fe81a091f894d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/a42f9da85c7c38d59f5e53f076fe81a091f894d0",
+                "reference": "a42f9da85c7c38d59f5e53f076fe81a091f894d0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "conflict": {
+                "symfony/console": "<3.4"
+            },
+            "require-dev": {
+                "symfony/console": "~3.4|~4.0"
+            },
+            "suggest": {
+                "symfony/console": "For validating YAML files using the lint command"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-04-03T05:14:20+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.4.0"
+    },
+    "platform-dev": []
+}

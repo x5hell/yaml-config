@@ -3,7 +3,7 @@
 namespace YamlConfig\CodeGenerator;
 
 use YamlConfig\YamlCommentsParser;
-use Helper\ArrayHelper;
+use YamlConfig\Helper\ArrayHelper;
 
 /** Список информации о классах */
 class ClassInfoList

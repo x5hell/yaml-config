@@ -11,13 +11,13 @@
     ],
     "minimum-stability": "stable",
     "require": {
+        "php": ">=5.4.0",
         "romaricdrigon/metayaml": "^1.1"
     },
     "autoload": {
         "psr-4": {
             "YamlConfig\\": "/",
-            "Helper\\": "Helper/",
-            "Config\\": "Config/Code"
+            "Helper\\": "Helper/"
         }
     }
 }

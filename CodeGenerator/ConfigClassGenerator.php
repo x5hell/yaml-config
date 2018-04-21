@@ -2,7 +2,7 @@
 
 namespace YamlConfig\CodeGenerator;
 
-use Helper\StringHelper;
+use YamlConfig\Helper\StringHelper;
 
 /** Генератор класса конфига */
 class ConfigClassGenerator

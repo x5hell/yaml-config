@@ -2,10 +2,9 @@
 
 namespace YamlConfig\CodeGenerator;
 
-use Finance\Module\Yaml\YamlCommentsParser;
-use Helper\ArrayHelper;
-use Helper\FileHelper;
-use Helper\StringHelper;
+use YamlConfig\YamlCommentsParser;
+use YamlConfig\Helper\FileHelper;
+use YamlConfig\Helper\StringHelper;
 use Symfony\Component\Yaml\Yaml;
 
 /** Генератор конфига */
