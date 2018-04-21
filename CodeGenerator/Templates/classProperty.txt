@@ -1,0 +1,2 @@
+    %classPropertyComment%
+    protected $%classPropertyName%%classPropertyValue%;

@@ -1,6 +1,6 @@
 {
-    "name": "x5hell/yaml_config",
-    "description": "finance module",
+    "name": "x5hell/yamlConfig",
+    "description": "config code generator from yaml config",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "YamlConfig\\": "Module/",
+            "YamlConfig\\": "/",
             "Helper\\": "Helper/",
             "Config\\": "Config/Code"
         }

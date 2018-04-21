@@ -1,0 +1,15 @@
+<?php
+
+%nameSpace%
+
+%useHistoryProperties%
+%useClasses%
+%classComment%
+class %className% extends HistoryProperties {
+
+%classProperties%
+
+%classFunctions%
+
+}
+

@@ -1,0 +1,10 @@
+    %getterComment%
+    public function get%PropertyName%()
+    {
+        if(is_null($this->%propertyName%)){
+            $this->%propertyName% = new %PropertyName%(
+                $this->getActualDate()
+            );
+        }
+        return $this->%propertyName%;
+    }
