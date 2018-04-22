@@ -3,7 +3,7 @@
 namespace __CONFIG__;
 
 use DateTime;
-use Helper\ArrayHelper;
+use YamlConfig\Helper\ArrayHelper;
 
 /** Класс со свойствами имеющими временную актуальность */
 abstract class HistoryProperties
