@@ -306,7 +306,8 @@ class ConfigClassGenerator
             '%getterComment%' => $this->getClassGetterComment(
                 $property
             ),
-            '%PropertyName%' => ucfirst($property->getName()),
+            '%ClassName%' => ucfirst($property->getName()),
+            '%PropertyName%' => $this->fixPropertyName($property->getName()),
             '%propertyName%' => $property->getName()
         ];
 
@@ -314,6 +315,14 @@ class ConfigClassGenerator
             $getterTemplate,
             $replace
         );
+    }
+    
+    /** Исправить название свойства
+     * @param string $propertyName имя свойства
+     * @return string исправленное имя свойства */
+    protected function fixPropertyName($propertyName)
+    {
+        return ucfirst(ltrim($propertyName, '_'));
     }
 
     /**
