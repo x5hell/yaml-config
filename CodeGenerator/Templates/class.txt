@@ -2,7 +2,7 @@
 
 %nameSpace%
 
-%useHistoryProperties%
+%useConfigNode%
 %useClasses%
 %classComment%
 class %className% extends HistoryProperties {
