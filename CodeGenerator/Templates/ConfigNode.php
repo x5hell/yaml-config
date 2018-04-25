@@ -5,8 +5,8 @@ namespace __CONFIG__;
 use DateTime;
 use YamlConfig\Helper\ArrayHelper;
 
-/** Класс со свойствами имеющими временную актуальность */
-abstract class HistoryProperties
+/** Класс узла конфига */
+abstract class ConfigNode
 {
     /** @var DateTime фактическая дата */
     protected $actualDate;
