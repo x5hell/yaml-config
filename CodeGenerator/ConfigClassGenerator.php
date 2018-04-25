@@ -142,7 +142,7 @@ class ConfigClassGenerator
         return
             'use '.
             $this->getConfigNamespace().
-            '\\HistoryProperties;';
+            '\\ConfigNode;';
     }
 
     /**
