@@ -4,7 +4,7 @@
 
 %useClasses%
 %classComment%
-class %className% extends extends \YamlConfig\CodeGenerator\ConfigNode {
+class %className% extends \YamlConfig\CodeGenerator\ConfigNode {
 
 %classProperties%
 
