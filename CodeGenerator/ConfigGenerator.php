@@ -209,7 +209,6 @@ class ConfigGenerator
 
             $classInfoList = $this->buildClassInfoList($configWithRoot);
 
-            $this->createConfigNode();
             foreach($classInfoList->getClassInfoList() as $classInfo){
                 $this->saveClassContent($classInfo);
             };
@@ -225,23 +224,6 @@ class ConfigGenerator
             is_dir($this->getConfigCodeFullPath()) === false
             ||
             filemtime($this->getConfigFullPath()) > filemtime($this->getConfigCodeFullPath());
-    }
-
-    /** Создание класса узла конфига */
-    protected function createConfigNode()
-    {
-        $fileName = 'ConfigNode.php';
-        $classTemplate = $this->getTemplateContent($fileName);
-        $fileRootDirectory = $this->getConfigCodeFullPath();
-        $classContent = StringHelper::replacePatterns(
-            $classTemplate,
-            ['__CONFIG__' => $this->getConfigNamespace()]
-        );
-        $filePath =
-            $fileRootDirectory.
-            DIRECTORY_SEPARATOR.
-            $fileName;
-        file_put_contents($filePath, $classContent);
     }
 
     /** Сгенерировать и сохранить контент класса конфига
