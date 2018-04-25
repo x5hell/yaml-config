@@ -37,7 +37,7 @@ abstract class HistoryProperties
     protected function getActualProperty($propertyName)
     {
         $propertyValue = $this->$propertyName;
-        if(ArrayHelper::isDateList($propertyValue)){
+        if(is_array($propertyName) && ArrayHelper::isDateList($propertyValue)){
             $historyProperty = array_slice($propertyValue, 0);
             krsort($historyProperty);
             foreach($historyProperty as $dateString => $value){
