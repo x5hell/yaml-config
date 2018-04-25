@@ -109,7 +109,7 @@ class ConfigClassGenerator
         $classTemplate = $this->getClassTemplate();
         $replace = [
             '%nameSpace%' => $this->getNamespace(),
-            '%useHistoryProperties%' => $this->getUseHistoryProperties(),
+            '%useConfigNode%' => $this->getUseConfigNode(),
             '%useClasses%' => $this->getUseClasses(),
             '%classComment%' => $this->getClassComment(),
             '%className%' => $this->getClassName(),
@@ -137,7 +137,7 @@ class ConfigClassGenerator
     /**
      * @return string подключение клласса для работы со свойствами имеющими временную актуальность
      */
-    protected function getUseHistoryProperties()
+    protected function getUseConfigNode()
     {
         return
             'use '.
