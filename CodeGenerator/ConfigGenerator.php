@@ -209,7 +209,7 @@ class ConfigGenerator
 
             $classInfoList = $this->buildClassInfoList($configWithRoot);
 
-            $this->createHistoryProperties();
+            $this->createConfigNode();
             foreach($classInfoList->getClassInfoList() as $classInfo){
                 $this->saveClassContent($classInfo);
             };
@@ -227,10 +227,10 @@ class ConfigGenerator
             filemtime($this->getConfigFullPath()) > filemtime($this->getConfigCodeFullPath());
     }
 
-    /** Создание класса для работы со свойствами привязанным к датам */
-    protected function createHistoryProperties()
+    /** Создание класса узла конфига */
+    protected function createConfigNode()
     {
-        $fileName = 'HistoryProperties.php';
+        $fileName = 'ConfigNode.php';
         $classTemplate = $this->getTemplateContent($fileName);
         $fileRootDirectory = $this->getConfigCodeFullPath();
         $classContent = StringHelper::replacePatterns(
