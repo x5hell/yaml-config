@@ -199,19 +199,32 @@ class ConfigGenerator
     /** Генерация кода конфига */
     public function generate()
     {
-        FileHelper::recreateDirectory(
-            $this->getConfigCodeFullPath()
-        );
-        $configWithRoot = [
-            $this->getConfigName() => $this->getYamlConfigTree()
-        ];
+        if($this->generationNeeded()){
+            FileHelper::recreateDirectory(
+                $this->getConfigCodeFullPath()
+            );
+            $configWithRoot = [
+                $this->getConfigName() => $this->getYamlConfigTree()
+            ];
 
-        $classInfoList = $this->buildClassInfoList($configWithRoot);
+            $classInfoList = $this->buildClassInfoList($configWithRoot);
 
-        $this->createHistoryProperties();
-        foreach($classInfoList->getClassInfoList() as $classInfo){
-            $this->saveClassContent($classInfo);
-        };
+            $this->createHistoryProperties();
+            foreach($classInfoList->getClassInfoList() as $classInfo){
+                $this->saveClassContent($classInfo);
+            };
+        }
+    }
+    
+    /**
+     * @return bool true - если генерация требуется
+     */
+    protected function generationNeeded()
+    {
+        return
+            is_dir($this->getConfigCodeFullPath()) === false
+            ||
+            filemtime($this->getConfigFullPath()) > filemtime($this->getConfigCodeFullPath());
     }
 
     /** Создание класса для работы со свойствами привязанным к датам */
