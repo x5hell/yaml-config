@@ -239,9 +239,10 @@ class ConfigGenerator
         $fileRootDirectory = $this->getConfigCodeFullPath();
 
         $namespaceParts = explode('\\', $classInfo->getNamespace());
-        array_shift($namespaceParts);
-        $fileRelativeDirectory = implode(DIRECTORY_SEPARATOR, $namespaceParts);
-
+        $baseNamespaceParts = explode('\\', $this->getConfigNamespace());
+        $relativeNamespaceParts = array_slice($namespaceParts, count($baseNamespaceParts));
+        $fileRelativeDirectory = implode(DIRECTORY_SEPARATOR, $relativeNamespaceParts);
+        
         $fileDirectoryPath = strlen($fileRelativeDirectory) > 0
             ? $fileRootDirectory.
                 DIRECTORY_SEPARATOR.
