@@ -53,4 +53,22 @@ abstract class ConfigNode
             return $propertyValue;
         }
     }
+    
+    /**
+     * @return array ассоциативный массив свойств
+     */
+    public function children()
+    {
+        $properties = get_object_vars($this);
+        $children = [];
+        foreach($properties as $propertyName => $propertyValue)
+        {
+            if($propertyName !== 'actualDate'){
+                $childrenName = ltrim($propertyName, '_');
+                $getChildrenFunction = 'get'. ucfirst($childrenName);
+                $children[$childrenName] = $this->{$getChildrenFunction}();
+            }
+        }
+        return $children;
+    }
 }
