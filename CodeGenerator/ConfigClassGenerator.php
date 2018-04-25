@@ -109,7 +109,6 @@ class ConfigClassGenerator
         $classTemplate = $this->getClassTemplate();
         $replace = [
             '%nameSpace%' => $this->getNamespace(),
-            '%useConfigNode%' => $this->getUseConfigNode(),
             '%useClasses%' => $this->getUseClasses(),
             '%classComment%' => $this->getClassComment(),
             '%className%' => $this->getClassName(),
@@ -132,17 +131,6 @@ class ConfigClassGenerator
         return strlen($namespace) > 0
             ? "namespace $namespace;"
             : '';
-    }
-
-    /**
-     * @return string подключение клласса для работы со свойствами имеющими временную актуальность
-     */
-    protected function getUseConfigNode()
-    {
-        return
-            'use '.
-            $this->getConfigNamespace().
-            '\\ConfigNode;';
     }
 
     /**
