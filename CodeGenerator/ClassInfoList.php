@@ -126,7 +126,7 @@ class ClassInfoList
     }
 
     /**
-     * @param array узел класса
+     * @param array $classNode узел класса
      * @param string[] $path путь к классу
      * @param string $className имя класса
      * @return ConfigClassInfo информация о классе
@@ -138,7 +138,7 @@ class ClassInfoList
         $namespacePath = array_slice($path, 0, -1);
         $nodePath = array_slice($path, 1);
         foreach ($namespacePath as $pathPart){
-            $namespace .= '\\'. ucfirst($pathPart);
+            $namespace .= '\\'. $this->fixClassName($pathPart);
         }
         $configClassInfo->setNamespace($namespace);
         $configClassInfo->setClassComment(
@@ -150,7 +150,7 @@ class ClassInfoList
         foreach ($classNode as $subNodeName => $subNode){
             $classProperty = $this->getClassProperty($nodePath, $subNodeName, $subNode);
             if ($classProperty->isClass()){
-                $subClassName = ucfirst($subNodeName);
+                $subClassName = $this->fixClassName($subNodeName);
                 $useClassList[] = implode(
                     '\\',
                     [$namespace, $className, $subClassName]
@@ -168,6 +168,25 @@ class ClassInfoList
         $configClassInfo->setClassPropertyList($classPropertyList);
         return $configClassInfo;
     }
+    
+    /** Исправить имя класса
+     * @param string $className имя класса
+     * @return string исправленное имя класса */
+    protected function fixClassName($className)
+    {
+        return $this->fixPropertyName(ucfirst($className));
+    }
+
+    /** Исправить имя свойства
+     * @param string $propertyName имя свойства
+     * @return string исправленное имя свойства
+     */
+    protected function fixPropertyName($propertyName)
+    {
+        return preg_match('/^\d/', $propertyName)
+            ? '_'. $propertyName
+            : $propertyName;
+    }
 
     /**
      * @param string[] $classPath путь к классу
@@ -178,9 +197,9 @@ class ClassInfoList
     protected function getClassProperty($classPath, $propertyName, $propertyValue)
     {
         $classProperty = new ClassProperty();
-        $classProperty->setName($propertyName);
+        $classProperty->setName($this->fixPropertyName($propertyName));
         if ($this->isClassNode($propertyValue)) {
-            $subClassName = ucfirst($propertyName);
+            $subClassName = $this->fixClassName($propertyName);
             $classProperty->setType($subClassName);
             $classProperty->setIsClass(true);
         } else {
