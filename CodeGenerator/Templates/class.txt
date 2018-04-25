@@ -5,7 +5,7 @@
 %useConfigNode%
 %useClasses%
 %classComment%
-class %className% extends HistoryProperties {
+class %className% extends ConfigNode {
 
 %classProperties%
 
