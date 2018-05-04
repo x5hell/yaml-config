@@ -196,8 +196,9 @@ class ConfigGenerator
         );
     }
 
-    /** Генерация кода конфига */
-    public function generate()
+    /** Генерация кода конфига
+     * @param callable $callback функция вызываемая после успешной генерации */
+    public function generate($callback = null)
     {
         if($this->generationNeeded()){
             FileHelper::recreateDirectory(
@@ -212,6 +213,10 @@ class ConfigGenerator
             foreach($classInfoList->getClassInfoList() as $classInfo){
                 $this->saveClassContent($classInfo);
             };
+            
+            if(is_callable($callback)){
+                $callback();
+            }
         }
     }
     
