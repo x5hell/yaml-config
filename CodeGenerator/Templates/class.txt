@@ -2,10 +2,9 @@
 
 %nameSpace%
 
-%useHistoryProperties%
 %useClasses%
 %classComment%
-class %className% extends HistoryProperties {
+class %className% extends \YamlConfig\CodeGenerator\ConfigNode {
 
 %classProperties%
 

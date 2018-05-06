@@ -1,12 +1,12 @@
 <?php
 
-namespace __CONFIG__;
+namespace YamlConfig\CodeGenerator;
 
 use DateTime;
 use YamlConfig\Helper\ArrayHelper;
 
-/** Класс со свойствами имеющими временную актуальность */
-abstract class HistoryProperties
+/** Класс узла конфига */
+abstract class ConfigNode
 {
     /** @var DateTime фактическая дата */
     protected $actualDate;
@@ -37,7 +37,7 @@ abstract class HistoryProperties
     protected function getActualProperty($propertyName)
     {
         $propertyValue = $this->$propertyName;
-        if(ArrayHelper::isDateList($propertyValue)){
+        if(is_array($propertyName) && ArrayHelper::isDateList($propertyValue)){
             $historyProperty = array_slice($propertyValue, 0);
             krsort($historyProperty);
             foreach($historyProperty as $dateString => $value){
@@ -52,5 +52,23 @@ abstract class HistoryProperties
         } else {
             return $propertyValue;
         }
+    }
+    
+    /**
+     * @return array ассоциативный массив свойств
+     */
+    public function children()
+    {
+        $properties = get_object_vars($this);
+        $children = [];
+        foreach($properties as $propertyName => $propertyValue)
+        {
+            if($propertyName !== 'actualDate'){
+                $childrenName = ltrim($propertyName, '_');
+                $getChildrenFunction = 'get'. ucfirst($childrenName);
+                $children[$childrenName] = $this->{$getChildrenFunction}();
+            }
+        }
+        return $children;
     }
 }

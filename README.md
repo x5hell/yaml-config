@@ -68,3 +68,28 @@ foreach($dateList as $date){
 * Создаваемый **модулем** php-код будет
 содержать phpDoc-комментарии, соответствующие
 комментариям в **yaml-файле**
+
+## Как использовать
+
+```php
+use YamlConfig\CodeGenerator\ConfigGenerator;
+
+$configGenerator = new ConfigGenerator();
+// путь к папке проекта
+$configGenerator->setProjectPath($rootDir);
+// относительный путь расположения yaml-файл с настройками
+$configGenerator->setConfigRelativePath($organizationsRelativePath);
+// относительный путь к папке в которой будут сгенерирован код конфига
+$configGenerator->setConfigCodeRelativePath($organizationsCodeRelativePath);
+// название класса конфига
+$configGenerator->setConfigName('Family');
+// пространство имён конфига
+$configGenerator->setConfigNamespace('Config\Family');
+// Генерация кода конфига
+$configGenerator->generate();
+```
+
+Особенности функции **generate**:
+1) Если изменений в исходном конфиге (по сравнению со сгенерированным кодом) нет, то перегенерация не происходит.
+2) В качестве необязательного параметра **generate** принимает функцию, которая будет вызвана после генерации кода.
+

@@ -109,7 +109,6 @@ class ConfigClassGenerator
         $classTemplate = $this->getClassTemplate();
         $replace = [
             '%nameSpace%' => $this->getNamespace(),
-            '%useHistoryProperties%' => $this->getUseHistoryProperties(),
             '%useClasses%' => $this->getUseClasses(),
             '%classComment%' => $this->getClassComment(),
             '%className%' => $this->getClassName(),
@@ -132,17 +131,6 @@ class ConfigClassGenerator
         return strlen($namespace) > 0
             ? "namespace $namespace;"
             : '';
-    }
-
-    /**
-     * @return string подключение клласса для работы со свойствами имеющими временную актуальность
-     */
-    protected function getUseHistoryProperties()
-    {
-        return
-            'use '.
-            $this->getConfigNamespace().
-            '\\HistoryProperties;';
     }
 
     /**
@@ -306,7 +294,8 @@ class ConfigClassGenerator
             '%getterComment%' => $this->getClassGetterComment(
                 $property
             ),
-            '%PropertyName%' => ucfirst($property->getName()),
+            '%ClassName%' => ucfirst($property->getName()),
+            '%PropertyName%' => $this->fixPropertyName($property->getName()),
             '%propertyName%' => $property->getName()
         ];
 
@@ -314,6 +303,14 @@ class ConfigClassGenerator
             $getterTemplate,
             $replace
         );
+    }
+    
+    /** Исправить название свойства
+     * @param string $propertyName имя свойства
+     * @return string исправленное имя свойства */
+    protected function fixPropertyName($propertyName)
+    {
+        return ucfirst(ltrim($propertyName, '_'));
     }
 
     /**

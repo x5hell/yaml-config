@@ -196,39 +196,39 @@ class ConfigGenerator
         );
     }
 
-    /** Генерация кода конфига */
-    public function generate()
+    /** Генерация кода конфига
+     * @param callable $callback функция вызываемая после успешной генерации */
+    public function generate($callback = null)
     {
-        FileHelper::recreateDirectory(
-            $this->getConfigCodeFullPath()
-        );
-        $configWithRoot = [
-            $this->getConfigName() => $this->getYamlConfigTree()
-        ];
+        if($this->generationNeeded()){
+            FileHelper::recreateDirectory(
+                $this->getConfigCodeFullPath()
+            );
+            $configWithRoot = [
+                $this->getConfigName() => $this->getYamlConfigTree()
+            ];
 
-        $classInfoList = $this->buildClassInfoList($configWithRoot);
+            $classInfoList = $this->buildClassInfoList($configWithRoot);
 
-        $this->createHistoryProperties();
-        foreach($classInfoList->getClassInfoList() as $classInfo){
-            $this->saveClassContent($classInfo);
-        };
+            foreach($classInfoList->getClassInfoList() as $classInfo){
+                $this->saveClassContent($classInfo);
+            };
+            
+            if(is_callable($callback)){
+                $callback();
+            }
+        }
     }
-
-    /** Создание класса для работы со свойствами привязанным к датам */
-    protected function createHistoryProperties()
+    
+    /**
+     * @return bool true - если генерация требуется
+     */
+    protected function generationNeeded()
     {
-        $fileName = 'HistoryProperties.php';
-        $classTemplate = $this->getTemplateContent($fileName);
-        $fileRootDirectory = $this->getConfigCodeFullPath();
-        $classContent = StringHelper::replacePatterns(
-            $classTemplate,
-            ['__CONFIG__' => $this->getConfigNamespace()]
-        );
-        $filePath =
-            $fileRootDirectory.
-            DIRECTORY_SEPARATOR.
-            $fileName;
-        file_put_contents($filePath, $classContent);
+        return
+            is_dir($this->getConfigCodeFullPath()) === false
+            ||
+            filemtime($this->getConfigFullPath()) > filemtime($this->getConfigCodeFullPath());
     }
 
     /** Сгенерировать и сохранить контент класса конфига
@@ -239,9 +239,10 @@ class ConfigGenerator
         $fileRootDirectory = $this->getConfigCodeFullPath();
 
         $namespaceParts = explode('\\', $classInfo->getNamespace());
-        array_shift($namespaceParts);
-        $fileRelativeDirectory = implode(DIRECTORY_SEPARATOR, $namespaceParts);
-
+        $baseNamespaceParts = explode('\\', $this->getConfigNamespace());
+        $relativeNamespaceParts = array_slice($namespaceParts, count($baseNamespaceParts));
+        $fileRelativeDirectory = implode(DIRECTORY_SEPARATOR, $relativeNamespaceParts);
+        
         $fileDirectoryPath = strlen($fileRelativeDirectory) > 0
             ? $fileRootDirectory.
                 DIRECTORY_SEPARATOR.
