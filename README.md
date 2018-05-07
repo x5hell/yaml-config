@@ -75,18 +75,13 @@ foreach($dateList as $date){
 use YamlConfig\CodeGenerator\ConfigGenerator;
 
 $configGenerator = new ConfigGenerator();
-// путь к папке проекта
-$configGenerator->setProjectPath($rootDir);
-// относительный путь расположения yaml-файл с настройками
-$configGenerator->setConfigRelativePath($organizationsRelativePath);
-// относительный путь к папке в которой будут сгенерирован код конфига
-$configGenerator->setConfigCodeRelativePath($organizationsCodeRelativePath);
-// название класса конфига
-$configGenerator->setConfigName('Family');
-// пространство имён конфига
-$configGenerator->setConfigNamespace('Config\Family');
-// Генерация кода конфига
-$configGenerator->generate();
+$configGenerator
+    ->setProjectPath($rootDir) // путь к папке проекта
+    ->setConfigRelativePath($organizationsRelativePath) // относительный путь расположения yaml-файл с настройками
+    ->setConfigCodeRelativePath($organizationsCodeRelativePath) // относительный путь к папке в которой будут сгенерирован код конфига
+    ->setConfigName('Family') // название класса конфига
+    ->setConfigNamespace('Config\Family') // пространство имён конфига
+    ->generate(); // Генерация кода конфига
 ```
 
 Особенности функции **generate**:
