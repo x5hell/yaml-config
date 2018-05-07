@@ -47,10 +47,12 @@ class ConfigGenerator
 
     /**
      * @param string $projectPath путь к папке проекта
+     * @return $this
      */
     public function setProjectPath($projectPath)
     {
         $this->projectPath = realpath($projectPath);
+        return $this;
     }
 
     /**
@@ -63,10 +65,12 @@ class ConfigGenerator
 
     /**
      * @param string $configCodeRelativePath относительный путь к папке в которой будут сгенерирован код конфига
+     * @return $this
      */
     public function setConfigCodeRelativePath($configCodeRelativePath)
     {
         $this->configCodeRelativePath = $configCodeRelativePath;
+        return $this;
     }
 
     /**
@@ -79,10 +83,12 @@ class ConfigGenerator
 
     /**
      * @param string $configRelativePath относительный путь расположения yaml-файл с настройками
+     * @return $this
      */
     public function setConfigRelativePath($configRelativePath)
     {
         $this->configRelativePath = $configRelativePath;
+        return $this;
     }
 
     /**
@@ -95,10 +101,12 @@ class ConfigGenerator
 
     /**
      * @param string $configNamespace пространство имён конфига
+     * @return $this
      */
     public function setConfigNamespace($configNamespace)
     {
         $this->configNamespace = $configNamespace;
+        return $this;
     }
 
     /**
@@ -111,10 +119,12 @@ class ConfigGenerator
 
     /**
      * @param string $configName название класса конфига
+     * @return $this
      */
     public function setConfigName($configName)
     {
         $this->configName = $configName;
+        return $this;
     }
 
     /**
