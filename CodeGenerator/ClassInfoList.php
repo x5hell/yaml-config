@@ -2,8 +2,8 @@
 
 namespace YamlConfig\CodeGenerator;
 
-use YamlConfig\YamlCommentsParser;
 use YamlConfig\Helper\ArrayHelper;
+use YamlConfig\YamlCommentsParser;
 
 /** Список информации о классах */
 class ClassInfoList
@@ -71,6 +71,24 @@ class ClassInfoList
     {
         $this->configNamespace = $configNamespace;
     }
+    
+    /**
+     * 
+     * @return ConfigClassInfo
+     */
+    public function createConfigClassInfo()
+    {
+        return new ConfigClassInfo();
+    }
+    
+    /**
+     * 
+     * @return ClassProperty
+     */
+    public function createClassProperty()
+    {
+        return new ClassProperty();
+    }
 
     /**
      * @return string содержимое конфига yaml
@@ -133,7 +151,7 @@ class ClassInfoList
      */
     protected function getConfigClassInfo($classNode, $path, $className)
     {
-        $configClassInfo = new ConfigClassInfo();
+        $configClassInfo = $this->createConfigClassInfo();
         $namespace = $this->getConfigNamespace();
         $namespacePath = array_slice($path, 0, -1);
         $nodePath = array_slice($path, 1);
@@ -196,7 +214,7 @@ class ClassInfoList
      */
     protected function getClassProperty($classPath, $propertyName, $propertyValue)
     {
-        $classProperty = new ClassProperty();
+        $classProperty = $this->createClassProperty();
         $classProperty->setName($this->fixPropertyName($propertyName));
         if ($this->isClassNode($propertyValue)) {
             $subClassName = $this->fixClassName($propertyName);

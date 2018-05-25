@@ -2,10 +2,9 @@
 
 namespace YamlConfig\CodeGenerator;
 
-use YamlConfig\YamlCommentsParser;
-use YamlConfig\Helper\FileHelper;
-use YamlConfig\Helper\StringHelper;
 use Symfony\Component\Yaml\Yaml;
+use YamlConfig\Helper\FileHelper;
+use YamlConfig\YamlCommentsParser;
 
 /** Генератор конфига */
 class ConfigGenerator
@@ -125,6 +124,26 @@ class ConfigGenerator
     {
         $this->configName = $configName;
         return $this;
+    }
+    
+    /**
+     * 
+     * @return ClassInfoList
+     */
+    public function createClassInfoList()
+    {
+        return new ClassInfoList;
+    }
+    
+    /**
+     * 
+     * @param ConfigClassInfo $configClassInfo информация о классе конфига
+     * @param string $configNamespace пространство имён конфига
+     * @return ConfigClassGenerator
+     */
+    public function createConfigClassGenerator($configClassInfo, $configNamespace)
+    {
+        return new ConfigClassGenerator($configClassInfo, $configNamespace);
     }
 
     /**
@@ -272,7 +291,7 @@ class ConfigGenerator
      */
     protected function buildClassInfoList($configTree)
     {
-        $classInfoList = new ClassInfoList();
+        $classInfoList = $this->createClassInfoList();
         $classInfoList->setConfigFullPath(
             $this->getConfigFullPath()
         );
@@ -289,7 +308,7 @@ class ConfigGenerator
      */
     protected function generateClassContent(ConfigClassInfo $classInfo)
     {
-        $classGenerator = new ConfigClassGenerator(
+        $classGenerator = $this->createConfigClassGenerator(
             $classInfo, $this->getConfigNamespace()
         );
         return $classGenerator->generateClassContent();
