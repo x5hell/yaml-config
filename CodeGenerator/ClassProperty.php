@@ -87,7 +87,7 @@ class ClassProperty
     /**
      * @return bool true - свойство является классом
      */
-    public function isClass()
+    public function isStructure()
     {
         return $this->isClass;
     }
@@ -95,7 +95,7 @@ class ClassProperty
     /**
      * @param bool $isClass true - свойство является классом
      */
-    public function setIsClass($isClass)
+    public function setIsStructure($isClass)
     {
         $this->isClass = $isClass;
     }

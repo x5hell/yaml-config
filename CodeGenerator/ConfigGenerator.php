@@ -130,7 +130,7 @@ class ConfigGenerator
      * 
      * @return ClassInfoList
      */
-    public function createClassInfoList()
+    public function createStructureInfoList()
     {
         return new ClassInfoList;
     }
@@ -141,7 +141,7 @@ class ConfigGenerator
      * @param string $configNamespace пространство имён конфига
      * @return ConfigClassGenerator
      */
-    public function createConfigClassGenerator($configClassInfo, $configNamespace)
+    public function createConfigStructureGenerator($configClassInfo, $configNamespace)
     {
         return new ConfigClassGenerator($configClassInfo, $configNamespace);
     }
@@ -237,10 +237,10 @@ class ConfigGenerator
                 $this->getConfigName() => $this->getYamlConfigTree()
             ];
 
-            $classInfoList = $this->buildClassInfoList($configWithRoot);
+            $classInfoList = $this->buildStructureInfoList($configWithRoot);
 
-            foreach($classInfoList->getClassInfoList() as $classInfo){
-                $this->saveClassContent($classInfo);
+            foreach($classInfoList->getStructureInfoList() as $classInfo){
+                $this->saveStructureContent($classInfo);
             };
             
             if(is_callable($callback)){
@@ -262,7 +262,7 @@ class ConfigGenerator
 
     /** Сгенерировать и сохранить контент класса конфига
      * @param ConfigClassInfo $classInfo информация о классе */
-    protected function saveClassContent(ConfigClassInfo $classInfo)
+    protected function saveStructureContent(ConfigClassInfo $classInfo)
     {
         $classContent = $this->generateClassContent($classInfo);
         $fileRootDirectory = $this->getConfigCodeFullPath();
@@ -280,7 +280,7 @@ class ConfigGenerator
 
         $fileFullPath = $fileDirectoryPath.
             DIRECTORY_SEPARATOR.
-            $classInfo->getClassName(). '.php';
+            $classInfo->getName(). '.php';
         FileHelper::createDirectory($fileDirectoryPath);
         file_put_contents($fileFullPath, $classContent);
     }
@@ -289,9 +289,9 @@ class ConfigGenerator
      * @param array $configTree дерево конфига
      * @return ClassInfoList список информации о генерируемых классах
      */
-    protected function buildClassInfoList($configTree)
+    protected function buildStructureInfoList($configTree)
     {
-        $classInfoList = $this->createClassInfoList();
+        $classInfoList = $this->createStructureInfoList();
         $classInfoList->setConfigFullPath(
             $this->getConfigFullPath()
         );
@@ -308,9 +308,9 @@ class ConfigGenerator
      */
     protected function generateClassContent(ConfigClassInfo $classInfo)
     {
-        $classGenerator = $this->createConfigClassGenerator(
+        $classGenerator = $this->createConfigStructureGenerator(
             $classInfo, $this->getConfigNamespace()
         );
-        return $classGenerator->generateClassContent();
+        return $classGenerator->generateStructureContent();
     }
 }

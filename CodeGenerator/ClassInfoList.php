@@ -26,7 +26,7 @@ class ClassInfoList
     /**
      * @return ConfigClassInfo[]
      */
-    public function getClassInfoList()
+    public function getStructureInfoList()
     {
         return $this->classInfoList;
     }
@@ -34,7 +34,7 @@ class ClassInfoList
     /**
      * @param ConfigClassInfo[] $classInfoList
      */
-    protected function setClassInfoList($classInfoList)
+    protected function setStructureInfoList($classInfoList)
     {
         $this->classInfoList = $classInfoList;
     }
@@ -76,7 +76,7 @@ class ClassInfoList
      * 
      * @return ConfigClassInfo
      */
-    public function createConfigClassInfo()
+    public function createConfigStructureInfo()
     {
         return new ConfigClassInfo();
     }
@@ -85,7 +85,7 @@ class ClassInfoList
      * 
      * @return ClassProperty
      */
-    public function createClassProperty()
+    public function createStructureProperty()
     {
         return new ClassProperty();
     }
@@ -106,7 +106,7 @@ class ClassInfoList
     /**
      * @param ConfigClassInfo $classInfo добавление информации о классе в список
      */
-    protected function addClassInfo(ConfigClassInfo $classInfo)
+    protected function addStructureInfo(ConfigClassInfo $classInfo)
     {
         $this->classInfoList[] = $classInfo;
     }
@@ -118,13 +118,13 @@ class ClassInfoList
      */
     public function initFromTree($tree, $path = [])
     {
-        $this->setClassInfoList([]);
+        $this->setStructureInfoList([]);
         foreach ($tree as $nodeName => $node){
-            if($this->isClassNode($node)){
-                $classInfo = $this->getConfigClassInfo(
+            if($this->iStructureNode($node)){
+                $classInfo = $this->getConfigStructureInfo(
                     $node, [$nodeName], ucfirst($nodeName)
                 );
-                $this->addClassInfo($classInfo);
+                $this->addStructureInfo($classInfo);
             }
         }
         return $this->classInfoList;
@@ -133,7 +133,7 @@ class ClassInfoList
     /** Проверка является ли узел классом
      * @param mixed $node узел дерева конфига
      * @return boolean true - является */
-    protected function isClassNode($node)
+    protected function iStructureNode($node)
     {
         return
             is_array($node)
@@ -149,48 +149,48 @@ class ClassInfoList
      * @param string $className имя класса
      * @return ConfigClassInfo информация о классе
      */
-    protected function getConfigClassInfo($classNode, $path, $className)
+    protected function getConfigStructureInfo($classNode, $path, $className)
     {
-        $configClassInfo = $this->createConfigClassInfo();
+        $configClassInfo = $this->createConfigStructureInfo();
         $namespace = $this->getConfigNamespace();
         $namespacePath = array_slice($path, 0, -1);
         $nodePath = array_slice($path, 1);
         foreach ($namespacePath as $pathPart){
-            $namespace .= '\\'. $this->fixClassName($pathPart);
+            $namespace .= '\\'. $this->fixStructureName($pathPart);
         }
         $configClassInfo->setNamespace($namespace);
-        $configClassInfo->setClassComment(
+        $configClassInfo->setComment(
             $this->getCommentByPath($nodePath)
         );
-        $configClassInfo->setClassName($className);
+        $configClassInfo->setName($className);
         $useClassList = [];
         $classPropertyList = [];
         foreach ($classNode as $subNodeName => $subNode){
-            $classProperty = $this->getClassProperty($nodePath, $subNodeName, $subNode);
-            if ($classProperty->isClass()){
-                $subClassName = $this->fixClassName($subNodeName);
+            $classProperty = $this->getStructureProperty($nodePath, $subNodeName, $subNode);
+            if ($classProperty->isStructure()){
+                $subClassName = $this->fixStructureName($subNodeName);
                 $useClassList[] = implode(
                     '\\',
                     [$namespace, $className, $subClassName]
                 );
-                $classInfo = $this->getConfigClassInfo(
+                $classInfo = $this->getConfigStructureInfo(
                     $subNode,
                     array_merge($path, [$subNodeName]),
                     $subClassName
                 );
-                $this->addClassInfo($classInfo);
+                $this->addStructureInfo($classInfo);
             }
             $classPropertyList[] = $classProperty;
         }
-        $configClassInfo->setUseClasses($useClassList);
-        $configClassInfo->setClassPropertyList($classPropertyList);
+        $configClassInfo->setUseStructures($useClassList);
+        $configClassInfo->setPropertyList($classPropertyList);
         return $configClassInfo;
     }
     
     /** Исправить имя класса
      * @param string $className имя класса
      * @return string исправленное имя класса */
-    protected function fixClassName($className)
+    protected function fixStructureName($className)
     {
         return $this->fixPropertyName(ucfirst($className));
     }
@@ -212,18 +212,18 @@ class ClassInfoList
      * @param mixed $propertyValue значение свойства
      * @return ClassProperty
      */
-    protected function getClassProperty($classPath, $propertyName, $propertyValue)
+    protected function getStructureProperty($classPath, $propertyName, $propertyValue)
     {
-        $classProperty = $this->createClassProperty();
+        $classProperty = $this->createStructureProperty();
         $classProperty->setName($this->fixPropertyName($propertyName));
-        if ($this->isClassNode($propertyValue)) {
-            $subClassName = $this->fixClassName($propertyName);
+        if ($this->iStructureNode($propertyValue)) {
+            $subClassName = $this->fixStructureName($propertyName);
             $classProperty->setType($subClassName);
-            $classProperty->setIsClass(true);
+            $classProperty->setIsStructure(true);
         } else {
             $classProperty->setValue($propertyValue);
             $classProperty->setType(gettype($propertyValue));
-            $classProperty->setIsClass(false);
+            $classProperty->setIsStructure(false);
         }
         $classProperty->setComment(
             $this->getCommentByPath(array_merge($classPath, [$propertyName]))

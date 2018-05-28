@@ -25,7 +25,7 @@ class ConfigClassGenerator
     /**
      * @return ConfigClassInfo информация о классе конфига
      */
-    public function getClassInfo()
+    public function getStructureInfo()
     {
         return $this->classInfo;
     }
@@ -54,7 +54,7 @@ class ConfigClassGenerator
     }
 
     /** @return string шаблон класса */
-    protected function getClassTemplate()
+    protected function getStructureTemplate()
     {
         return $this->getTemplateContent(
             'class.txt'
@@ -62,7 +62,7 @@ class ConfigClassGenerator
     }
 
     /** @return string шаблон свойства класса */
-    protected function getClassPropertyTemplate()
+    protected function getStructurePropertyTemplate()
     {
         return $this->getTemplateContent(
             'classProperty.txt'
@@ -70,7 +70,7 @@ class ConfigClassGenerator
     }
 
     /** @return string шаблон коментария свойства класса */
-    protected function getClassPropertyCommentTemplate()
+    protected function getStructurePropertyCommentTemplate()
     {
         return $this->getTemplateContent(
             'classPropertyComment.txt'
@@ -78,7 +78,7 @@ class ConfigClassGenerator
     }
 
     /** @return string шаблон get-функции класса */
-    protected function getClassGetterTemplate()
+    protected function getStructureGetterTemplate()
     {
         return $this->getTemplateContent(
             'classGetter.txt'
@@ -86,7 +86,7 @@ class ConfigClassGenerator
     }
 
     /** @return string шаблон ленивой get-функции класса */
-    protected function getClassLazyGetterTemplate()
+    protected function getStructureLazyGetterTemplate()
     {
         return $this->getTemplateContent(
             'classLazyGetter.txt'
@@ -94,7 +94,7 @@ class ConfigClassGenerator
     }
 
     /** @return string шаблон комментария get-функции класса */
-    protected function getClassGetterCommentTemplate()
+    protected function getStructureGetterCommentTemplate()
     {
         return $this->getTemplateContent(
             'classGetterComment.txt'
@@ -104,16 +104,16 @@ class ConfigClassGenerator
     /**
      * @return string содержимое сгенеритованного класса
      */
-    public function generateClassContent()
+    public function generateStructureContent()
     {
-        $classTemplate = $this->getClassTemplate();
+        $classTemplate = $this->getStructureTemplate();
         $replace = [
             '%nameSpace%' => $this->getNamespace(),
-            '%useClasses%' => $this->getUseClasses(),
-            '%classComment%' => $this->getClassComment(),
-            '%className%' => $this->getClassName(),
-            '%classProperties%' => $this->getClassProperties(),
-            '%classFunctions%' => $this->getClassFunctions()
+            '%useClasses%' => $this->getUseStructures(),
+            '%classComment%' => $this->getStructureComment(),
+            '%className%' => $this->getStructureName(),
+            '%classProperties%' => $this->getStructureProperties(),
+            '%classFunctions%' => $this->getStructureFunctions()
         ];
 
         return StringHelper::replacePatterns(
@@ -127,7 +127,7 @@ class ConfigClassGenerator
      */
     protected function getNamespace()
     {
-        $namespace = $this->getClassInfo()->getNamespace();
+        $namespace = $this->getStructureInfo()->getNamespace();
         return strlen($namespace) > 0
             ? "namespace $namespace;"
             : '';
@@ -136,9 +136,9 @@ class ConfigClassGenerator
     /**
      * @return string список подключаемых классов
      */
-    protected function getUseClasses()
+    protected function getUseStructures()
     {
-        $useClasses = $this->getClassInfo()->getUseClasses();
+        $useClasses = $this->getStructureInfo()->getUseStructures();
         $result = '';
         foreach ($useClasses as $useClass){
             $result .= "use $useClass;\n";
@@ -149,12 +149,12 @@ class ConfigClassGenerator
     /**
      * @return string комментарий класса
      */
-    protected function getClassComment()
+    protected function getStructureComment()
     {
         $classComment =
             StringHelper::upperCaseFirstLetter(
                 trim(
-                    $this->getClassInfo()->getClassComment()
+                    $this->getStructureInfo()->getComment()
                 )
             );
         return strlen($classComment) > 0
@@ -166,23 +166,23 @@ class ConfigClassGenerator
     /**
      * @return string название класса
      */
-    protected function getClassName()
+    protected function getStructureName()
     {
-        return $this->getClassInfo()->getClassName();
+        return $this->getStructureInfo()->getName();
     }
 
     /**
      * @return string свойства класса
      */
-    protected function getClassProperties()
+    protected function getStructureProperties()
     {
         $result = [];
         $propertyList = $this
-            ->getClassInfo()
-            ->getClassPropertyList();
+            ->getStructureInfo()
+            ->getPropertyList();
         foreach ($propertyList as $property){
             $result[] = '    '. trim(
-                $this->getClassProperty($property)
+                $this->getStructureProperty($property)
             );
         }
         return implode("\n\n", $result);
@@ -192,17 +192,17 @@ class ConfigClassGenerator
      * @param ClassProperty $classProperty описание свойства класса
      * @return string свойство класса
      */
-    protected function getClassProperty(
+    protected function getStructureProperty(
         ClassProperty $classProperty
     )
     {
-        $propertyTemplate = $this->getClassPropertyTemplate();
+        $propertyTemplate = $this->getStructurePropertyTemplate();
         $replace = [
-            '%classPropertyComment%' => $this->getClassPropertyComment(
+            '%classPropertyComment%' => $this->getStructurePropertyComment(
                 $classProperty
             ),
             '%classPropertyName%' => $classProperty->getName(),
-            '%classPropertyValue%' => $this->getClassPropertyValue(
+            '%classPropertyValue%' => $this->getStructurePropertyValue(
                 $classProperty
             )
         ];
@@ -217,7 +217,7 @@ class ConfigClassGenerator
      * @param ClassProperty $classProperty описание свойства класса
      * @return string свойство класса
      */
-    protected function getClassPropertyValue(
+    protected function getStructurePropertyValue(
         ClassProperty $classProperty
     )
     {
@@ -230,11 +230,11 @@ class ConfigClassGenerator
      * @param ClassProperty $classProperty описание свойства класса
      * @return string комментарий к свойству класса
      */
-    protected function getClassPropertyComment(
+    protected function getStructurePropertyComment(
         ClassProperty $classProperty
     )
     {
-        $propertyComment = $this->getClassPropertyCommentTemplate();
+        $propertyComment = $this->getStructurePropertyCommentTemplate();
         $replace = [
             '%propertyType%' => $classProperty->getType(),
             '%propertyComment%' => trim($classProperty->getComment())
@@ -251,17 +251,17 @@ class ConfigClassGenerator
     /**
      * @return string функции класса
      */
-    protected function getClassFunctions()
+    protected function getStructureFunctions()
     {
         $result = [];
         $propertyList = $this
-            ->getClassInfo()
-            ->getClassPropertyList();
+            ->getStructureInfo()
+            ->getPropertyList();
         foreach ($propertyList as $property){
             $result[] =
                 '    '.
                 trim(
-                    $this->getClassFunction($property)
+                    $this->getStructureFunction($property)
                 );
         }
         return implode("\n\n", $result);
@@ -271,13 +271,13 @@ class ConfigClassGenerator
      * @param ClassProperty $property описание свойства класса
      * @return string функция класса
      */
-    protected function getClassFunction(ClassProperty $property)
+    protected function getStructureFunction(ClassProperty $property)
     {
-        return $property->isClass()
-            ? $this->getClassGetter(
-                $property, $this->getClassLazyGetterTemplate())
-            : $this->getClassGetter(
-                $property, $this->getClassGetterTemplate());
+        return $property->isStructure()
+            ? $this->getStructureGetter(
+                $property, $this->getStructureLazyGetterTemplate())
+            : $this->getStructureGetter(
+                $property, $this->getStructureGetterTemplate());
     }
 
     /**
@@ -285,13 +285,13 @@ class ConfigClassGenerator
      * @param string $getterTemplate шаблон get-функции
      * @return string get-функция класса
      */
-    protected function getClassGetter(
+    protected function getStructureGetter(
         ClassProperty $property,
         $getterTemplate
     )
     {
         $replace = [
-            '%getterComment%' => $this->getClassGetterComment(
+            '%getterComment%' => $this->getStructureGetterComment(
                 $property
             ),
             '%ClassName%' => ucfirst($property->getName()),
@@ -317,9 +317,9 @@ class ConfigClassGenerator
      * @param ClassProperty $property описание свойства класса
      * @return string комментарий get-функции класса
      */
-    protected function getClassGetterComment(ClassProperty $property)
+    protected function getStructureGetterComment(ClassProperty $property)
     {
-        $getterComment = $this->getClassGetterCommentTemplate();
+        $getterComment = $this->getStructureGetterCommentTemplate();
         $replace = [
             '%propertyType%' => $property->getType(),
             '%propertyComment%' => trim($property->getComment())

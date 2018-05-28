@@ -39,7 +39,7 @@ class ConfigClassInfo
     /**
      * @return string[] список подключаемых классов
      */
-    public function getUseClasses()
+    public function getUseStructures()
     {
         return $this->useClasses;
     }
@@ -47,7 +47,7 @@ class ConfigClassInfo
     /**
      * @param string[] $useClasses список подключаемых классов
      */
-    public function setUseClasses($useClasses)
+    public function setUseStructures($useClasses)
     {
         $this->useClasses = $useClasses;
     }
@@ -55,7 +55,7 @@ class ConfigClassInfo
     /**
      * @return string название класса
      */
-    public function getClassName()
+    public function getName()
     {
         return $this->className;
     }
@@ -63,7 +63,7 @@ class ConfigClassInfo
     /**
      * @param string $className название класса
      */
-    public function setClassName($className)
+    public function setName($className)
     {
         $this->className = $className;
     }
@@ -71,7 +71,7 @@ class ConfigClassInfo
     /**
      * @return string комментарий класса
      */
-    public function getClassComment()
+    public function getComment()
     {
         return $this->classComment;
     }
@@ -79,7 +79,7 @@ class ConfigClassInfo
     /**
      * @param string $classComment комментарий класса
      */
-    public function setClassComment($classComment)
+    public function setComment($classComment)
     {
         $this->classComment = $classComment;
     }
@@ -87,7 +87,7 @@ class ConfigClassInfo
     /**
      * @return ClassProperty[] список свойств класса
      */
-    public function getClassPropertyList()
+    public function getPropertyList()
     {
         return $this->classPropertyList;
     }
@@ -95,7 +95,7 @@ class ConfigClassInfo
     /**
      * @param ClassProperty[] $classPropertyList список свойств класса
      */
-    public function setClassPropertyList($classPropertyList)
+    public function setPropertyList($classPropertyList)
     {
         $this->classPropertyList = $classPropertyList;
     }
