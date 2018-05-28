@@ -1,15 +1,15 @@
 <?php
 
-namespace YamlConfig\CodeGenerator;
+namespace YamlConfig\Structure;
 
 use YamlConfig\Helper\ArrayHelper;
 use YamlConfig\YamlCommentsParser;
 
-/** Список информации о классах */
-class ClassInfoList
+/** Список информации о структурах */
+class ClassInfoList implements StructureInfoListInterface
 {
-    /** @var ConfigStructureInfoInterface[] список информации о классах */
-    protected $classInfoList;
+    /** @var ConfigStructureInfoInterface[] список информации о структуре конфига */
+    protected $structureInfoList;
 
     /** @var string полный путь к конфигу  */
     protected $configFullPath;
@@ -25,17 +25,16 @@ class ClassInfoList
 
     public function getStructureInfoList()
     {
-        return $this->classInfoList;
+        return $this->structureInfoList;
     }
 
     /**
-     * @param ConfigStructureInfoInterface[] $classInfoList
+     * @param ConfigStructureInfoInterface[] $structureInfoList список информации о структуре конфига
      */
-    protected function setStructureInfoList($classInfoList)
+    protected function setStructureInfoList($structureInfoList)
     {
-        $this->classInfoList = $classInfoList;
+        $this->structureInfoList = $structureInfoList;
     }
-
 
     /**
      * @return string полный путь к конфигу
@@ -45,9 +44,6 @@ class ClassInfoList
         return $this->configFullPath;
     }
 
-    /**
-     * @param string $configFullPath полный путь к конфигу
-     */
     public function setConfigFullPath($configFullPath)
     {
         $this->configFullPath = $configFullPath;
@@ -56,35 +52,14 @@ class ClassInfoList
     /**
      * @return string пространство имён конфига
      */
-    public function getConfigNamespace()
+    protected function getConfigNamespace()
     {
         return $this->configNamespace;
     }
 
-    /**
-     * @param string $configNamespace пространство имён конфига
-     */
     public function setConfigNamespace($configNamespace)
     {
         $this->configNamespace = $configNamespace;
-    }
-    
-    /**
-     * 
-     * @return ConfigClassInfo
-     */
-    public function createConfigStructureInfo()
-    {
-        return new ConfigClassInfo();
-    }
-    
-    /**
-     * 
-     * @return ClassProperty
-     */
-    public function createStructureProperty()
-    {
-        return new ClassProperty();
     }
 
     /**
@@ -101,18 +76,13 @@ class ClassInfoList
     }
 
     /**
-     * @param ConfigClassInfo $classInfo добавление информации о классе в список
+     * @param ConfigStructureInfoInterface $configStructureInfo добавление информации о структуре в список
      */
-    protected function addStructureInfo(ConfigClassInfo $classInfo)
+    protected function addStructureInfo(ConfigStructureInfoInterface $configStructureInfo)
     {
-        $this->classInfoList[] = $classInfo;
+        $this->structureInfoList[] = $configStructureInfo;
     }
 
-    /**
-     * @param array $tree дерево конфига
-     * @param string[] $path текущий путь
-     * @return ConfigClassInfo[] список информации о классах
-     */
     public function initFromTree($tree, $path = [])
     {
         $this->setStructureInfoList([]);
@@ -124,10 +94,10 @@ class ClassInfoList
                 $this->addStructureInfo($classInfo);
             }
         }
-        return $this->classInfoList;
+        return $this->structureInfoList;
     }
 
-    /** Проверка является ли узел классом
+    /** Проверка является ли узел структурой
      * @param mixed $node узел дерева конфига
      * @return boolean true - является */
     protected function iStructureNode($node)
@@ -141,61 +111,60 @@ class ClassInfoList
     }
 
     /**
-     * @param array $classNode узел класса
-     * @param string[] $path путь к классу
-     * @param string $className имя класса
-     * @return ConfigClassInfo информация о классе
+     * @param array $structureNode узел структуры
+     * @param string[] $path путь к структуре
+     * @param string $structureName имя структуры
+     * @return ConfigStructureInfoInterface информация о структуре
      */
-    protected function getConfigStructureInfo($classNode, $path, $className)
+    protected function getConfigStructureInfo($structureNode, $path, $structureName)
     {
-        $configClassInfo = $this->createConfigStructureInfo();
+        $configStructureInfo = $this->createConfigStructureInfo();
         $namespace = $this->getConfigNamespace();
         $namespacePath = array_slice($path, 0, -1);
         $nodePath = array_slice($path, 1);
         foreach ($namespacePath as $pathPart){
             $namespace .= '\\'. $this->fixStructureName($pathPart);
         }
-        $configClassInfo->setNamespace($namespace);
-        $configClassInfo->setComment(
+        $configStructureInfo->setNamespace($namespace);
+        $configStructureInfo->setComment(
             $this->getCommentByPath($nodePath)
         );
-        $configClassInfo->setName($className);
+        $configStructureInfo->setName($structureName);
         $useClassList = [];
-        $classPropertyList = [];
-        foreach ($classNode as $subNodeName => $subNode){
-            $classProperty = $this->getStructureProperty($nodePath, $subNodeName, $subNode);
-            if ($classProperty->isStructure()){
-                $subClassName = $this->fixStructureName($subNodeName);
+        $structurePropertyList = [];
+        foreach ($structureNode as $subNodeName => $subNode){
+            $structureProperty = $this->getStructureProperty($nodePath, $subNodeName, $subNode);
+            if ($structureProperty->isStructure()){
+                $subStructureName = $this->fixStructureName($subNodeName);
                 $useClassList[] = implode(
                     '\\',
-                    [$namespace, $className, $subClassName]
+                    [$namespace, $structureName, $subStructureName]
                 );
-                $classInfo = $this->getConfigStructureInfo(
+                $structureInfo = $this->getConfigStructureInfo(
                     $subNode,
                     array_merge($path, [$subNodeName]),
-                    $subClassName
+                    $subStructureName
                 );
-                $this->addStructureInfo($classInfo);
+                $this->addStructureInfo($structureInfo);
             }
-            $classPropertyList[] = $classProperty;
+            $structurePropertyList[] = $structureProperty;
         }
-        $configClassInfo->setUseStructures($useClassList);
-        $configClassInfo->setPropertyList($classPropertyList);
-        return $configClassInfo;
+        $configStructureInfo->setUseStructures($useClassList);
+        $configStructureInfo->setPropertyList($structurePropertyList);
+        return $configStructureInfo;
     }
     
-    /** Исправить имя класса
-     * @param string $className имя класса
-     * @return string исправленное имя класса */
-    protected function fixStructureName($className)
+    /** Исправить имя структуры
+     * @param string $structureName имя структуры
+     * @return string исправленное имя структуры */
+    protected function fixStructureName($structureName)
     {
-        return $this->fixPropertyName(ucfirst($className));
+        return $this->fixPropertyName(ucfirst($structureName));
     }
 
     /** Исправить имя свойства
      * @param string $propertyName имя свойства
-     * @return string исправленное имя свойства
-     */
+     * @return string исправленное имя свойства */
     protected function fixPropertyName($propertyName)
     {
         return preg_match('/^\d/', $propertyName)
@@ -204,10 +173,10 @@ class ClassInfoList
     }
 
     /**
-     * @param string[] $classPath путь к классу
+     * @param string[] $classPath путь к структуре
      * @param string $propertyName имя свойства
      * @param mixed $propertyValue значение свойства
-     * @return ClassProperty
+     * @return StructurePropertyInterface
      */
     protected function getStructureProperty($classPath, $propertyName, $propertyValue)
     {
