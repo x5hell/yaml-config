@@ -6,7 +6,7 @@ use YamlConfig\Helper\ArrayHelper;
 use YamlConfig\YamlCommentsParser;
 
 /** Список информации о структурах */
-class ClassInfoList implements StructureInfoListInterface
+abstract class StructureInfoList implements StructureInfoListInterface
 {
     /** @var ConfigStructureInfoInterface[] список информации о структуре конфига */
     protected $structureInfoList;
@@ -149,7 +149,7 @@ class ClassInfoList implements StructureInfoListInterface
             }
             $structurePropertyList[] = $structureProperty;
         }
-        $configStructureInfo->setUseStructures($useClassList);
+        $configStructureInfo->setUseClasses($useClassList);
         $configStructureInfo->setPropertyList($structurePropertyList);
         return $configStructureInfo;
     }

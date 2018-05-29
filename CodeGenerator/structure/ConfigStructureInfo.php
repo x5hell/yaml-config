@@ -8,8 +8,8 @@ abstract class ConfigStructureInfo implements ConfigStructureInfoInterface
     /** @var string пространство имён структуры конфига */
     protected $namespace;
 
-    /** @var string[] список подключаемых структур */
-    protected $useStructures;
+    /** @var string[] список подключаемых классов */
+    protected $useClasses;
 
     /** @var string название структуры конфига */
     protected $className;
@@ -30,14 +30,14 @@ abstract class ConfigStructureInfo implements ConfigStructureInfoInterface
         $this->namespace = $namespace;
     }
 
-    public function getUseStructures()
+    public function getUseClasses()
     {
-        return $this->useStructures;
+        return $this->useClasses;
     }
 
-    public function setUseStructures($useStructures)
+    public function setUseClasses($useClasses)
     {
-        $this->useStructures = $useStructures;
+        $this->useClasses = $useClasses;
     }
 
     public function getName()

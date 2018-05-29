@@ -16,14 +16,14 @@ interface ConfigStructureInfoInterface
     public function setNamespace($namespace);
 
     /**
-     * @return string[] список подключаемых структур
+     * @return string[] список подключаемых классов
      */
-    public function getUseStructures();
+    public function getUseClasses();
 
     /**
      * @param string[] $useStructures список подключаемых структур
      */
-    public function setUseStructures($useStructures);
+    public function setUseClasses($useStructures);
 
     /**
      * @return string название структуры конфига

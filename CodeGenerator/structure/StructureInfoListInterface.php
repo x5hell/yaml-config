@@ -21,7 +21,7 @@ interface StructureInfoListInterface
     public function setConfigNamespace($configNamespace);
 
     /**
-     * @return StructureInfoInterface информация о структуре конфига
+     * @return ConfigStructureInfoInterface информация о структуре конфига
      */
     public function createConfigStructureInfo();
 
