@@ -1,12 +1,12 @@
 <?php
 
-namespace YamlConfig\CodeGenerator;
+namespace YamlConfig\ClassCodeGenerator;
 
 use DateTime;
-use YamlConfig\Helper\ArrayHelper;
+use Slov\Helper\ArrayHelper;
 
 /** Класс узла конфига */
-abstract class ConfigNode
+abstract class ClassConfigNode
 {
     /** @var DateTime фактическая дата */
     protected $actualDate;

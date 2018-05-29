@@ -12,12 +12,15 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "romaricdrigon/metayaml": "^1.1"
+        "romaricdrigon/metayaml": "^1.1",
+        "4slv/helper": "v1.0.1"
     },
     "autoload": {
         "psr-4": {
             "YamlConfig\\": "/",
-            "Helper\\": "Helper/"
+            "YamlConfig\\StructureCodeGenerator\\": "/CodeGenerator/structure",
+            "YamlConfig\\ClassCodeGenerator\\": "/CodeGenerator/class",
+            "YamlConfig\\InterfaceCodeGenerator\\": "/CodeGenerator/interface"
         }
     }
 }

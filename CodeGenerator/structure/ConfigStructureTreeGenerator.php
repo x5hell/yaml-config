@@ -1,18 +1,14 @@
 <?php
 
-namespace YamlConfig\CodeGenerator;
+namespace YamlConfig\StructureCodeGenerator;
 
-use YamlConfig\YamlCommentsParser;
-use YamlConfig\Helper\FileHelper;
-use YamlConfig\Helper\StringHelper;
 use Symfony\Component\Yaml\Yaml;
+use Slov\Helper\FileHelper;
+use YamlConfig\YamlCommentsParser;
 
-/** Генератор конфига */
-class ConfigGenerator
+/** Генератор структуры */
+abstract class ConfigStructureTreeGenerator
 {
-
-    const DEFAULT_CONFIG_NAME = 'Config';
-
     /** @var string путь к папке проекта */
     protected $projectPath;
 
@@ -25,8 +21,8 @@ class ConfigGenerator
     /** @var string пространство имён конфига */
     protected $configNamespace;
 
-    /** @var string название класса конфига */
-    protected $configName = self::DEFAULT_CONFIG_NAME;
+    /** @var string название структуры конфига */
+    protected $configName;
 
     /** @var string[] комментарии к узлам конфига */
     protected $configNodeComments;
@@ -40,17 +36,19 @@ class ConfigGenerator
     /**
      * @return string путь к папке проекта
      */
-    public function getProjectPath()
+    protected function getProjectPath()
     {
         return $this->projectPath;
     }
 
     /**
      * @param string $projectPath путь к папке проекта
+     * @return $this
      */
     public function setProjectPath($projectPath)
     {
         $this->projectPath = realpath($projectPath);
+        return $this;
     }
 
     /**
@@ -63,10 +61,12 @@ class ConfigGenerator
 
     /**
      * @param string $configCodeRelativePath относительный путь к папке в которой будут сгенерирован код конфига
+     * @return $this
      */
     public function setConfigCodeRelativePath($configCodeRelativePath)
     {
         $this->configCodeRelativePath = $configCodeRelativePath;
+        return $this;
     }
 
     /**
@@ -79,43 +79,64 @@ class ConfigGenerator
 
     /**
      * @param string $configRelativePath относительный путь расположения yaml-файл с настройками
+     * @return $this
      */
     public function setConfigRelativePath($configRelativePath)
     {
         $this->configRelativePath = $configRelativePath;
+        return $this;
     }
 
     /**
      * @return string пространство имён конфига
      */
-    public function getConfigNamespace()
+    protected function getConfigNamespace()
     {
         return $this->configNamespace;
     }
 
     /**
      * @param string $configNamespace пространство имён конфига
+     * @return $this
      */
     public function setConfigNamespace($configNamespace)
     {
         $this->configNamespace = $configNamespace;
+        return $this;
     }
 
     /**
-     * @return string название класса конфига
+     * @return string название структуры конфига
      */
-    public function getConfigName()
+    protected function getConfigName()
     {
         return $this->configName;
     }
 
     /**
-     * @param string $configName название класса конфига
+     * @param string $configName название структуры конфига
+     * @return $this
      */
     public function setConfigName($configName)
     {
         $this->configName = $configName;
+        return $this;
     }
+    
+    /**
+     * @return StructureInfoListInterface список информации о структурах
+     */
+    protected function createStructureInfoList()
+    {
+        return new StructureInfoList();
+    }
+    
+    /**
+     * 
+     * @param ConfigStructureInfoInterface $configStructureInfo информация о структуре конфига
+     * @return ConfigStructureGeneratorInterface
+     */
+    abstract protected function createConfigStructureGenerator($configStructureInfo);
 
     /**
      * @return string[] комментарии к узлам конфига
@@ -155,7 +176,7 @@ class ConfigGenerator
     }
 
     /**
-     * @return array
+     * @return array массив дерева конфига
      */
     protected function getYamlConfigTree()
     {
@@ -181,21 +202,6 @@ class ConfigGenerator
                 $this->getConfigCodeRelativePath();
     }
 
-    /**
-     * @param string $templateFileName имя файла шаблона
-     * @return string содержимое шаблона
-     */
-    protected function getTemplateContent($templateFileName)
-    {
-        return file_get_contents(
-            __DIR__ .
-            DIRECTORY_SEPARATOR.
-            'Templates'.
-            DIRECTORY_SEPARATOR.
-            $templateFileName
-        );
-    }
-
     /** Генерация кода конфига
      * @param callable $callback функция вызываемая после успешной генерации */
     public function generate($callback = null)
@@ -208,12 +214,12 @@ class ConfigGenerator
                 $this->getConfigName() => $this->getYamlConfigTree()
             ];
 
-            $classInfoList = $this->buildClassInfoList($configWithRoot);
+            $structureInfoList = $this->buildStructureInfoList($configWithRoot);
 
-            foreach($classInfoList->getClassInfoList() as $classInfo){
-                $this->saveClassContent($classInfo);
+            foreach($structureInfoList->getStructureInfoList() as $structureInfo){
+                $this->saveStructureContent($structureInfo);
             };
-            
+
             if(is_callable($callback)){
                 $callback();
             }
@@ -231,14 +237,14 @@ class ConfigGenerator
             filemtime($this->getConfigFullPath()) > filemtime($this->getConfigCodeFullPath());
     }
 
-    /** Сгенерировать и сохранить контент класса конфига
-     * @param ConfigClassInfo $classInfo информация о классе */
-    protected function saveClassContent(ConfigClassInfo $classInfo)
+    /** Сгенерировать и сохранить контент структуры конфига
+     * @param ConfigStructureInfoInterface $structureInfo информация о структуре */
+    protected function saveStructureContent(ConfigStructureInfoInterface $structureInfo)
     {
-        $classContent = $this->generateClassContent($classInfo);
+        $structureContent = $this->generateStructureContent($structureInfo);
         $fileRootDirectory = $this->getConfigCodeFullPath();
 
-        $namespaceParts = explode('\\', $classInfo->getNamespace());
+        $namespaceParts = explode('\\', $structureInfo->getNamespace());
         $baseNamespaceParts = explode('\\', $this->getConfigNamespace());
         $relativeNamespaceParts = array_slice($namespaceParts, count($baseNamespaceParts));
         $fileRelativeDirectory = implode(DIRECTORY_SEPARATOR, $relativeNamespaceParts);
@@ -251,37 +257,37 @@ class ConfigGenerator
 
         $fileFullPath = $fileDirectoryPath.
             DIRECTORY_SEPARATOR.
-            $classInfo->getClassName(). '.php';
+            $structureInfo->getName(). '.php';
         FileHelper::createDirectory($fileDirectoryPath);
-        file_put_contents($fileFullPath, $classContent);
+        file_put_contents($fileFullPath, $structureContent);
     }
 
     /**
      * @param array $configTree дерево конфига
-     * @return ClassInfoList список информации о генерируемых классах
+     * @return StructureInfoListInterface список информации о генерируемых структурах
      */
-    protected function buildClassInfoList($configTree)
+    protected function buildStructureInfoList($configTree)
     {
-        $classInfoList = new ClassInfoList();
-        $classInfoList->setConfigFullPath(
+        $structureInfoList = $this->createStructureInfoList();
+        $structureInfoList->setConfigFullPath(
             $this->getConfigFullPath()
         );
-        $classInfoList->setConfigNamespace(
+        $structureInfoList->setConfigNamespace(
             $this->getConfigNamespace()
         );
-        $classInfoList->initFromTree($configTree);
-        return $classInfoList;
+        $structureInfoList->initFromTree($configTree);
+        return $structureInfoList;
     }
 
     /**
-     * @param ConfigClassInfo $classInfo информация о классе
-     * @return string содержимое сгенерированного класса
+     * @param ConfigStructureInfoInterface $structureInfo информация о структуре
+     * @return string содержимое сгенерированной структуры
      */
-    protected function generateClassContent(ConfigClassInfo $classInfo)
+    protected function generateStructureContent(ConfigStructureInfoInterface $structureInfo)
     {
-        $classGenerator = new ConfigClassGenerator(
-            $classInfo, $this->getConfigNamespace()
+        $structureGenerator = $this->createConfigStructureGenerator(
+            $structureInfo
         );
-        return $classGenerator->generateClassContent();
+        return $structureGenerator->generateStructureContent();
     }
 }

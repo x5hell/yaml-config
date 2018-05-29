@@ -1,0 +1,2 @@
+    %getterComment%
+    public function get%PropertyName%();

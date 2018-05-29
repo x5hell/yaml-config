@@ -1,0 +1,14 @@
+<?php
+
+%nameSpace%
+
+use YamlConfig\ClassCodeGenerator\ClassConfigNode;
+%useClasses%
+%structureComment%
+class %structureName% extends ClassConfigNode {
+
+%structureProperties%
+
+%structureFunctions%
+
+}
