@@ -1,8 +1,8 @@
 <?php
 
-namespace YamlConfig\Structure;
+namespace YamlConfig\StructureCodeGenerator;
 
-use YamlConfig\Helper\StringHelper;
+use Slov\Helper\StringHelper;
 
 /** Генератор структуры конфига */
 abstract class ConfigStructureGenerator implements ConfigStructureGeneratorInterface
@@ -21,7 +21,13 @@ abstract class ConfigStructureGenerator implements ConfigStructureGeneratorInter
     public function setStructureInfo($structureInfo)
     {
         $this->structureInfo = $structureInfo;
+        return $this;
     }
+
+    /**
+     * @return string путь к папке с шаблонами
+     */
+    abstract protected function getTemplateDirectoryPath();
 
     /**
      * @param string $templateFileName имя файла шаблона
@@ -39,38 +45,11 @@ abstract class ConfigStructureGenerator implements ConfigStructureGeneratorInter
     /** @return string шаблон структуры */
     abstract protected function getStructureTemplate();
 
-    /** @return string шаблон свойства структуры */
-    abstract protected function getStructurePropertyTemplate();
-
-    /** @return string шаблон коментария свойства структуры */
-    abstract protected function getStructurePropertyCommentTemplate();
-
     /** @return string шаблон get-функции структуры */
     abstract protected function getStructureGetterTemplate();
 
-    /** @return string шаблон ленивой get-функции структуры */
-    abstract protected function getStructureLazyGetterTemplate();
-
     /** @return string шаблон комментария get-функции структуры */
     abstract protected function getStructureGetterCommentTemplate();
-
-    public function generateStructureContent()
-    {
-        $structureTemplate = $this->getStructureTemplate();
-        $replace = [
-            '%nameSpace%' => $this->getNamespace(),
-            '%useClasses%' => $this->getUseClasses(),
-            '%structureComment%' => $this->getStructureComment(),
-            '%structureName%' => $this->getStructureName(),
-            '%structureProperties%' => $this->getStructureProperties(),
-            '%structureFunctions%' => $this->getStructureFunctions()
-        ];
-
-        return StringHelper::replacePatterns(
-            $structureTemplate,
-            $replace
-        );
-    }
 
     /**
      * @return string пространство имён структуры
@@ -122,83 +101,6 @@ abstract class ConfigStructureGenerator implements ConfigStructureGeneratorInter
     }
 
     /**
-     * @return string свойства структуры
-     */
-    protected function getStructureProperties()
-    {
-        $result = [];
-        $propertyList = $this
-            ->getStructureInfo()
-            ->getPropertyList();
-        foreach ($propertyList as $property){
-            $result[] = '    '. trim(
-                $this->getStructureProperty($property)
-            );
-        }
-        return implode("\n\n", $result);
-    }
-
-    /**
-     * @param StructurePropertyInterface $property описание свойства структуры
-     * @return string свойство структуры
-     */
-    protected function getStructureProperty(
-        StructurePropertyInterface $property
-    )
-    {
-        $propertyTemplate = $this->getStructurePropertyTemplate();
-        $replace = [
-            '%structurePropertyComment%' => $this->getStructurePropertyComment(
-                $property
-            ),
-            '%structurePropertyName%' => $property->getName(),
-            '%structurePropertyValue%' => $this->getStructurePropertyValue(
-                $property
-            )
-        ];
-
-        return StringHelper::replacePatterns(
-            $propertyTemplate,
-            $replace
-        );
-    }
-
-    /**
-     * @param StructurePropertyInterface $property описание свойства структуры
-     * @return string свойство структуры
-     */
-    protected function getStructurePropertyValue(
-        StructurePropertyInterface $property
-    )
-    {
-        return $property->getValue() !== null
-            ? ' = '. var_export($property->getValue(), 1)
-            : '';
-    }
-
-    /**
-     * @param StructurePropertyInterface $property описание свойства структуры
-     * @return string комментарий к свойству структуры
-     */
-    protected function getStructurePropertyComment(
-        StructurePropertyInterface $property
-    )
-    {
-        $propertyComment = $this->getStructurePropertyCommentTemplate();
-        $replace = [
-            '%propertyType%' => $property->getType(),
-            '%propertyComment%' => trim($property->getComment())
-        ];
-
-        return $property->getComment() === null
-            ? ''
-            : StringHelper::replacePatterns(
-                $propertyComment,
-                $replace
-            );
-    }
-
-    /**
      * @return string функции структруры
      */
     protected function getStructureFunctions()
@@ -221,14 +123,7 @@ abstract class ConfigStructureGenerator implements ConfigStructureGeneratorInter
      * @param StructurePropertyInterface $property описание свойства структуры
      * @return string функция структуры
      */
-    protected function getStructureFunction(StructurePropertyInterface $property)
-    {
-        return $property->isStructure()
-            ? $this->getStructureGetter(
-                $property, $this->getStructureLazyGetterTemplate())
-            : $this->getStructureGetter(
-                $property, $this->getStructureGetterTemplate());
-    }
+    abstract protected function getStructureFunction(StructurePropertyInterface $property);
 
     /**
      * @param StructurePropertyInterface $property описание свойства структуры

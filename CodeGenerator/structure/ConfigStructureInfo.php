@@ -1,9 +1,9 @@
 <?php
 
-namespace YamlConfig\Structure;
+namespace YamlConfig\StructureCodeGenerator;
 
 /** Информация о структуре конфига */
-abstract class ConfigStructureInfo implements ConfigStructureInfoInterface
+class ConfigStructureInfo implements ConfigStructureInfoInterface
 {
     /** @var string пространство имён структуры конфига */
     protected $namespace;

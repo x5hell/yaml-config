@@ -1,6 +1,6 @@
 <?php
 
-namespace YamlConfig\Structure;
+namespace YamlConfig\StructureCodeGenerator;
 
 /** Список информации о структурах */
 interface StructureInfoListInterface
@@ -19,16 +19,6 @@ interface StructureInfoListInterface
      * @param string $configNamespace пространство имён конфига
      */
     public function setConfigNamespace($configNamespace);
-
-    /**
-     * @return ConfigStructureInfoInterface информация о структуре конфига
-     */
-    public function createConfigStructureInfo();
-
-    /**
-     * @return StructureProperty
-     */
-    public function createStructureProperty();
 
     /**
      * @param array $tree дерево конфига

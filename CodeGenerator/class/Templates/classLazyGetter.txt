@@ -2,7 +2,7 @@
     public function get%PropertyName%()
     {
         if(is_null($this->%propertyName%)){
-            $this->%propertyName% = new %ClassName%(
+            $this->%propertyName% = new %StructureName%(
                 $this->getActualDate()
             );
         }

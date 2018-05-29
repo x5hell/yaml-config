@@ -1,12 +1,12 @@
 <?php
 
-namespace YamlConfig\Structure;
+namespace YamlConfig\StructureCodeGenerator;
 
-use YamlConfig\Helper\ArrayHelper;
+use Slov\Helper\ArrayHelper;
 use YamlConfig\YamlCommentsParser;
 
 /** Список информации о структурах */
-abstract class StructureInfoList implements StructureInfoListInterface
+class StructureInfoList implements StructureInfoListInterface
 {
     /** @var ConfigStructureInfoInterface[] список информации о структуре конфига */
     protected $structureInfoList;
@@ -60,6 +60,22 @@ abstract class StructureInfoList implements StructureInfoListInterface
     public function setConfigNamespace($configNamespace)
     {
         $this->configNamespace = $configNamespace;
+    }
+
+    /**
+     * @return StructureProperty свойство структуры
+     */
+    protected function createStructureProperty()
+    {
+        return new StructureProperty();
+    }
+
+    /**
+     * @return ConfigStructureInfoInterface информация о структуре конфига
+     */
+    protected function createConfigStructureInfo()
+    {
+        return new ConfigStructureInfo();
     }
 
     /**

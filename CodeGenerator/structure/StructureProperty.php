@@ -1,9 +1,9 @@
 <?php
 
-namespace YamlConfig\Structure;
+namespace YamlConfig\StructureCodeGenerator;
 
 /** Свойство структуры */
-abstract class StructureProperty implements StructurePropertyInterface
+class StructureProperty implements StructurePropertyInterface
 {
     /** @var string имя свойства */
     protected $name;

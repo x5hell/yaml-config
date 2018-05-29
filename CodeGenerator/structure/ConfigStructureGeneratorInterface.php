@@ -1,6 +1,6 @@
 <?php
 
-namespace YamlConfig\Structure;
+namespace YamlConfig\StructureCodeGenerator;
 
 /** Генератор структуры конфига */
 interface ConfigStructureGeneratorInterface
@@ -8,13 +8,9 @@ interface ConfigStructureGeneratorInterface
 
     /**
      * @param ConfigStructureInfoInterface $structureInfo информация о структуре конфига
+     * @return $this
      */
     public function setStructureInfo($structureInfo);
-
-    /**
-     * @return string путь к папке с шаблонами
-     */
-    public function getTemplateDirectoryPath();
 
     /**
      * @return string содержимое сгенеритованной структуры

@@ -1,0 +1,12 @@
+<?php
+
+%nameSpace%
+
+use YamlConfigInterface\InterfaceCodeGenerator\InterfaceConfigNode;
+%useClasses%
+%structureComment%
+interface %structureName% extends InterfaceConfigNode {
+
+%structureFunctions%
+
+}

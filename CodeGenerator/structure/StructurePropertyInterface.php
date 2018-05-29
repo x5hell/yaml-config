@@ -1,6 +1,6 @@
 <?php
 
-namespace YamlConfig\Structure;
+namespace YamlConfig\StructureCodeGenerator;
 
 /** Свойство структуры */
 interface StructurePropertyInterface
