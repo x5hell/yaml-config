@@ -219,7 +219,7 @@ abstract class ConfigStructureTreeGenerator
             foreach($structureInfoList->getStructureInfoList() as $structureInfo){
                 $this->saveStructureContent($structureInfo);
             };
-            
+
             if(is_callable($callback)){
                 $callback();
             }

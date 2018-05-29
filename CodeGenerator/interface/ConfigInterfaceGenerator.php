@@ -1,6 +1,6 @@
 <?php
 
-namespace YamlConfig\ClassCodeGenerator;
+namespace YamlConfig\InterfaceCodeGenerator;
 
 use Slov\Helper\StringHelper;
 use YamlConfig\StructureCodeGenerator\ConfigStructureGenerator;

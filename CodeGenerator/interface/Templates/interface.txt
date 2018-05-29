@@ -2,7 +2,7 @@
 
 %nameSpace%
 
-use YamlConfigInterface\InterfaceCodeGenerator\InterfaceConfigNode;
+use YamlConfig\InterfaceCodeGenerator\InterfaceConfigNode;
 %useClasses%
 %structureComment%
 interface %structureName% extends InterfaceConfigNode {

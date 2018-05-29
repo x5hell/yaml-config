@@ -1,5 +1,9 @@
 <?php
 
+namespace YamlConfig\InterfaceCodeGenerator;
+
+use DateTime;
+
 /** Интерфейс узла конфига */
 interface InterfaceConfigNode
 {

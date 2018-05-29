@@ -2,7 +2,6 @@
 
 namespace YamlConfig\InterfaceCodeGenerator;
 
-use YamlConfig\ClassCodeGenerator\ConfigInterfaceGenerator;
 use YamlConfig\StructureCodeGenerator\ConfigStructureTreeGenerator;
 
 
